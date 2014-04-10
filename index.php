@@ -21,14 +21,13 @@ while(!feof($file))
 	$url=fgets($file);
 	$urls=explode(",",$url);
 	$cleanurl=end($urls);
+	$cleanurl=str_replace("\n","",$cleanurl);
 	$bits=explode("/",$cleanurl);
 	$name=end($bits);
-	$cleanurl="http://www.airventuri.com/images/acc/Air-Venturi-Scuba-Tank-Adapter--Hose-Assembly-1-8-BSPP-Female-Connector-Gauge_AV-00038.jpg";
 	$imagestring=curl($cleanurl);
 	$exts=explode(".",$name);
 	$extension=$exts[1];
 	$name=$path.'/images/'.$name;
-	echo $name;
 	if($extension=="jpeg" || $extension=="jpg")
 	imagejpeg(imagecreatefromstring($imagestring),$name);
 	else if($extension=="gif")
@@ -45,8 +44,10 @@ while(!feof($file))
 	imagegd(imagecreatefromstring($imagestring),$name);
 	else if($extension=="gd2")
 	imagegd2(imagecreatefromstring($imagestring),$name);
-	if(is_writeable($name)) echo 'Yes';else echo 'no';
-	echo "Line".$num." : ".$name.'<br/>';	
+	$created='not';
+	if(file_exists($name)) $created='';
+
+	echo "Line".$num." : ".$name.' Image '.$created.' created'.'<br/>';	
 }
 fclose($file);
 ?>
